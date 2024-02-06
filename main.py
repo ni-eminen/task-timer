@@ -1,6 +1,5 @@
 import time
 import os
-import threading
 from pynput import keyboard
 cmd = input('Topic: ')
 global coffee_count
