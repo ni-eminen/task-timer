@@ -4,8 +4,13 @@ from pynput import keyboard
 cmd = input('Topic: ')
 minutes = float(input('Timer (minutes): '))
 global coffee_count
+global history
+
 coffee_count = 0
 increment = .1
+principles = [
+
+]
 
 def timer():
     global coffee_count
@@ -18,19 +23,20 @@ def timer():
         print(f'Elapsed time: {max(minutes - 1 - int(elapsed // 60), 0)} min,'
                                 f' {round(60 - (elapsed % 60), 2) if round(elapsed % 60) != 0 else 0} sec')
         print(f'coffees today: {coffee_count}')
+        print()
+        for x in principles:
+            print(x)
 
 def on_press(key):
-        try:
-            if key.char == 'c':
-                global coffee_count
-                coffee_count += 1
-            print('alphanumeric key {0} pressed'.format(
-                key.char))
-        except AttributeError:
-            # Special key
-            pass
+    global coffee_count
+    try:
+        if key.char == 'c':
+            coffee_count += 1
+        print('alphanumeric key {0} pressed'.format(key.char))
+    except AttributeError:
 
-# ...or, in a non-blocking fashion:
+        pass
+
 listener = keyboard.Listener(
     on_press=on_press)
 listener.start()
