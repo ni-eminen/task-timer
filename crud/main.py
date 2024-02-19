@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from db_connection import create_timestamp, read_timestamps, update_timestamp, delete_timestamp
-from model import TimestampCreate
+from model import TimestampCreate, Timestamp
 
 app = FastAPI()
 
@@ -23,8 +23,8 @@ def get_timestamps_endpoint():
     return {"timestamps": timestamps}
 
 
-@app.put("/timestamps/{timestamp_id}")
-def update_timestamp_endpoint(timestamp: TimestampCreate):
+@app.put("/timestamps/")
+def update_timestamp_endpoint(timestamp: Timestamp):
     timestamp = update_timestamp(timestamp)
     return timestamp[0] if len(timestamp) > 0 else {}
 

@@ -1,6 +1,6 @@
 import sqlite3
 
-from model import TimestampCreate
+from model import TimestampCreate, Timestamp
 
 
 def create_connection():
@@ -22,7 +22,7 @@ def create_table():
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     topic TEXT NOT NULL,
     start TEXT NOT NULL,
-    stop TIMESTAMP NOT NULL
+    timestamp TEXT NOT NULL
     )
     """)
     connection.commit()
@@ -35,7 +35,7 @@ create_table()
 def create_timestamp(timestamp: TimestampCreate):
     connection = create_connection()
     cursor = connection.cursor()
-    sql = "INSERT INTO timestamps (topic, start, stop) VALUES (?, ?, ?) RETURNING *"
+    sql = "INSERT INTO timestamps (topic, timestamp, start) VALUES (?, ?, ?) RETURNING *"
     cursor.execute(sql, (timestamp.topic, timestamp.timestamp, timestamp.start))
     row = cursor.fetchall()
     connection.commit()
@@ -53,11 +53,11 @@ def delete_timestamp(timestamp_id: int):
     return timestamp_id
 
 
-def update_timestamp(timestamp: TimestampCreate):
+def update_timestamp(timestamp: Timestamp):
     sql = """ UPDATE timestamps
                   SET topic = ? ,
                       timestamp = ?,
-                      start = ? ,
+                      start = ?
                   WHERE id = ?
                   RETURNING *"""
     connection = create_connection()
