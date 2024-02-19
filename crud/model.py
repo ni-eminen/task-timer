@@ -6,4 +6,4 @@ class TimestampCreate(BaseModel):
  timestamp: str
 
 class Timestamp(TimestampCreate):
- id: int
+    id: int
