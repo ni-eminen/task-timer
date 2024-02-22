@@ -1,11 +1,14 @@
 import time
 import os
+import requests
+import time
 from pynput import keyboard
 cmd = input('Topic: ')
 minutes = float(input('Timer (minutes): '))
 global coffee_count
 global history
 
+api_url = "http://localhost:8000"
 coffee_count = 0
 increment = .1
 principles = [
@@ -13,6 +16,9 @@ principles = [
 ]
 
 def timer():
+    time.time()
+    response = requests.post(f'{api_url}/timestamps', json={"topic": cmd, "start": True, "timestamp": time.time()})
+    print('response from server:', response.json())
     global coffee_count
     elapsed = 0
     while minutes - (elapsed / 60) > 0:
@@ -26,6 +32,10 @@ def timer():
         print()
         for x in principles:
             print(x)
+
+    response = requests.post(f'{api_url}/timestamps', json={"topic": cmd, "start": False, "timestamp": time.time()})
+    print('response from server:', response.json())
+
 
 def on_press(key):
     global coffee_count
