@@ -22,7 +22,9 @@ def create_table():
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     topic TEXT NOT NULL,
     start TEXT NOT NULL,
-    timestamp TEXT NOT NULL
+    timestamp REAL NOT NULL,
+    id_start_timestamp INTEGER,
+    FOREIGN KEY(id_start_timestamp) REFERENCES timestamps(id)
     )
     """)
     connection.commit()
@@ -35,8 +37,8 @@ create_table()
 def create_timestamp(timestamp: TimestampCreate):
     connection = create_connection()
     cursor = connection.cursor()
-    sql = "INSERT INTO timestamps (topic, timestamp, start) VALUES (?, ?, ?) RETURNING *"
-    cursor.execute(sql, (timestamp.topic, timestamp.timestamp, timestamp.start))
+    sql = "INSERT INTO timestamps (topic, timestamp, start, id_start_timestamp) VALUES (?, ?, ?, ?) RETURNING *"
+    cursor.execute(sql, (timestamp.topic, timestamp.timestamp, timestamp.start, timestamp.id_start_timestamp))
     row = cursor.fetchall()
     connection.commit()
     connection.close()
@@ -57,12 +59,13 @@ def update_timestamp(timestamp: Timestamp):
     sql = """ UPDATE timestamps
                   SET topic = ? ,
                       timestamp = ?,
-                      start = ?
+                      start = ?,
+                      id_start_timestamp = ?
                   WHERE id = ?
                   RETURNING *"""
     connection = create_connection()
     cursor = connection.cursor()
-    cursor.execute(sql, (timestamp.topic, timestamp.timestamp, timestamp.start, timestamp.id))
+    cursor.execute(sql, (timestamp.topic, timestamp.timestamp, timestamp.start, timestamp.id_start_timestamp, timestamp.id))
     rows = cursor.fetchall()
     connection.commit()
     connection.close()
